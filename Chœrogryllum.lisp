@@ -8,6 +8,7 @@
    #:holiday-on
    #:date-string
    #:month*
+   #:cal-month.html
    #:cal-month
    #:cal-year))
 
@@ -85,23 +86,29 @@
     (with-output-to-string (s)
       (cal-month-header year month s)
       (loop for pad-day below first-weekday-of-month
-         do (princ "     " s))
+            do (princ "     " s))
       (let (holidays)
         (loop for day from 1 upto 30
-           for holiday = (holiday-on year month day)
-           do (format s " ~2d~2a" day (if holiday
-                                          (progn
-                                            (push day holidays)
-                                            (concatenate 'string "*" (exponent-digit (length holidays))))
-                                          "  "))
-           when (zerop (mod (+ day first-weekday-of-month) 9))
-           do (terpri s))
+              for holiday = (holiday-on year month day)
+              do (format s " ~2d~2a" day (if holiday
+                                             (progn
+                                               (push day holidays)
+                                               (concatenate 'string "*" (exponent-digit (length holidays))))
+                                             "  "))
+              when (zerop (mod (+ day first-weekday-of-month) 9))
+                do (terpri s))
         (terpri s)
         (cal-month/print-holiday-footnotes year month holidays s)
         (princ "---------------------------------------------" s)
         (terpri s)))))
 
-(defun cal-month.html (year month)
+(defun this-year ()
+  (nth-value 5 (decode*-universal-time)))
+
+(defun this-month ()
+  (nth-value 4 (decode*-universal-time)))
+
+(defun cal-month.html (&optional (year (this-year)) (month (this-month)))
   "Pretty-prints a one-month mini-calendar."
   (let ((first-weekday-of-month (first-weekday-of-month year month)))
     (with-output-to-string (s)
@@ -110,16 +117,16 @@
       (cal-month-header.html year month s)
       (princ "</TH></TR><TR>" s)
       (loop for pad-day below first-weekday-of-month
-         do (princ " <TD></TD> " s))
+            do (princ " <TD></TD> " s))
       (let (holidays)
         (loop for day from 1 upto 30
-           for holiday = (holiday-on year month day)
-           do (if holiday
-                  (format s "<TD><ABBR TITLE='~a'> ~2d </ABBR> </TD>"
-                          holiday day)
-                  (format s "<TD> ~2d </TD>" day))
-           when (zerop (mod (+ day first-weekday-of-month) 9))
-           do (princ "</TR><TR>" s))
+              for holiday = (holiday-on year month day)
+              do (if holiday
+                     (format s "<TD><ABBR TITLE='~a'> ~2d </ABBR> </TD>"
+                             holiday day)
+                     (format s "<TD> ~2d </TD>" day))
+              when (zerop (mod (+ day first-weekday-of-month) 9))
+                do (princ "</TR><TR>" s))
         (terpri s)
         (princ "</TABLE>" s)
         (terpri s)))))
