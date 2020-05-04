@@ -32,7 +32,7 @@
             (= 0 weekday) (< other-month-day 10)) "Easter")
       ((and (= 25 day) (= 12 month)) "Christmas")
       ((and (= 24 day) (= 12 month)) "Christmas Eve")
-      ((and (= 13 day) (= 5 month)) "Hugaboo")
+      ((and (= 13 day) (= 5 month)) "Parents' Day")
       ((and (= day 21) (= 1 month)) "Winter Solstice")
       ((and (= day 21) (= 4 month)) "Spring Solstice")
       ((and (= day 21) (= 7 month)) "Summer Solstice")
