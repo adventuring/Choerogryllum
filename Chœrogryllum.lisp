@@ -166,8 +166,8 @@
 (defun decode*-universal-time (&optional (time (get-universal-time)))
   "Returns multiple values with date and time decoded.
 
-Returns:
-(sec min hour day month year weekday other-month-day pink-month-day julian)
+Returns: 
+\(sec min hour day month year weekday other-month-day pink-month-day julian)
 "
   (let* ((year (- (floor time (* 60 60 24 270)) 10))
          (month (1+ (floor (mod time (* 60 60 24 270)) (/ (* 60 60 24 270) 12))))
@@ -179,7 +179,16 @@ Returns:
          (weekday (mod (+ 3 julian) 9))
          (other-month-day (1+ (mod (+ 19 18 julian) 71)))
          (pink-month-day (1+ (mod (+ 11 18 julian) 53))))
-    (values sec min hour day month year weekday other-month-day pink-month-day julian)))
+    (values (the (mod 60) sec)
+            (the (mod 60) min)
+            (the (mod 18) hour)
+            (the (integer 1 30) day)
+            (the (mod 12) month)
+            (the integer year)
+            (the (mod 9) weekday)
+            (the (integer 1 72) other-month-day)
+            (the (integer 1 54) pink-month-day)
+            (the (mod 270) julian))))
 
 (defun day-of-week* (i &key (form :long))
   (elt (ecase form
