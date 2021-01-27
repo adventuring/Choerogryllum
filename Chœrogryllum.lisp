@@ -17,6 +17,60 @@
 
 
 (defun holiday-on (year month day)
+  "Returns the name of any holiday on YEAR, MONTH, DAY.
+
+YEAR, MONTH, and DAY are the integral values of the Chœrogryllym year,
+month, and day.
+
+If there is no holiday, but there is a full moon (any moon), that may
+be reported instead.
+
+@cindex Chœrogryllum Holidays
+
+@subsection Chœrogryllum Holiday
+
+The following holidays are recognized and reported:
+
+@table @b
+
+@item Trimestus
+occurs when all three moons are full. Since the
+months are evenly matched to the phases of The Moon, this will always
+occur on the 15 day of some month. This is a major festival day.
+@item Hallowe'en
+occurs on the 30 day of Procavia (month 10).
+@item Hallowsday
+occurs on the 1st day of Dendrohyrax (month 11).
+@item Easter
+occurs on Lightningsday some time between Inunguis,
+Manatus, or Hydrodamalis, (months 3-5) based on the phase of The Other
+Moon.
+@item Christmas
+occurs on the 25 day of Tethytheria (month 12).
+@item Christmas Eve
+occurs on the 24 day of Tethytheria (month 12).
+@item Parents' Day
+occurs on the 13 day of Hydrodamalis (month 5). It takes the place of
+both Mothers' Day and Fathers' Day on Earth.
+@item The Winter Solstice
+occurs on the 21 day of Sirenia (month 1).
+@item The Spring Equinox
+occurs on the 21 day of Manatus (month 4).
+@item The Summer Solstice
+occurs on the 21 day of Pygmaeus (month 7).
+@item The Autumn Equinox
+occurs on the 21 day of Procavia (month 10).
+@item Fawkesday
+occurs on the 5 day of Dendrohyrax (month 11).
+@item New Year's Day
+occurs on the first day of Sirenia (month 1).
+@item The Summer Arts Festival
+runs from the 17th to the 20th day of Pygmaeus, except on Blanksday.
+@item Duomestus
+occurs whenever the Other Moon and Pink Moon are both full
+
+@end table
+"
   (multiple-value-bind
         (_sec _min _hour _day _month _year
               weekday other-month-day pink-month-day)
@@ -34,7 +88,7 @@
       ((and (= 24 day) (= 12 month)) "Christmas Eve")
       ((and (= 13 day) (= 5 month)) "Parents' Day")
       ((and (= day 21) (= 1 month)) "Winter Solstice")
-      ((and (= day 21) (= 4 month)) "Spring Solstice")
+      ((and (= day 21) (= 4 month)) "Spring Equinox")
       ((and (= day 21) (= 7 month)) "Summer Solstice")
       ((and (= day 21) (= 10 month)) "Autumn Equinox")
       ((and (= 5 day) (= 11 month)) "Fawkesday")
@@ -50,6 +104,7 @@
       (t nil))))
 
 (defun exponent-digit (number)
+  "Returns the digit NUMBER in exponent (superscript) character form"
   (check-type number (integer 0 10))
   (coerce (list (elt "⁰¹²³⁴⁵⁶⁷⁸⁹†" number)) 'string))
 
@@ -63,9 +118,11 @@
     (terpri stream)))
 
 (defun first-weekday-of-month (year month)
+  "Returns the weekday number (0-8) of the first day of MONTH in YEAR."
   (nth-value 6 (decode*-universal-time (encode*-universal-time 0 0 9 1 month year))))
 
 (defun cal-month-header (year month stream)
+  "Prints a header for a calendar of MONTH in YEAR to STREAM."
   (declare (ignore year))
   (format stream "~45@<~:@r. ~a  ~;---------------------------------------------~>
 
@@ -74,6 +131,7 @@
           (mapcar (rcurry #'day-of-week* :form :abbrev) (range 0 8))))
 
 (defun cal-month-header.html (year month stream)
+  "Writes an HTML header for a calendar of MONTH in YEAR to STREAM."
   (declare (ignore year))
   (format stream "<TR><TH COLSPAN='9'>~:@r. ~a </TH></TR>
 <TR> ~{<TH>~a.</TH>~^ ~} </TR>~%"
