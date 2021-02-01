@@ -233,7 +233,7 @@ Returns:
          (hour (floor (mod time (/ (* 60 60 24 270) (* 12 30))) (/ (* 60 60 24 270) (* 12 30 18))))
          (min  (floor (mod time (/ (* 60 60 24 270) (* 12 30 18))) (/ (* 60 60 24 270) (* 12 30 18 60))))
          (sec  (floor (mod time (/ (* 60 60 24 270) (* 12 30 18 60))) (/ (* 60 60 24 270) (* 12 30 18 60 60))))
-         (julian (+ day (* 30 month) (* 270 year)))
+         (julian (mod (+ day (* 30 month) (* 270 year)) 270))
          (weekday (mod (+ 3 julian) 9))
          (other-month-day (1+ (mod (+ 19 18 julian) 71)))
          (pink-month-day (1+ (mod (+ 11 18 julian) 53))))
