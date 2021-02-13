@@ -221,7 +221,7 @@ occurs whenever the Other Moon and Pink Moon are both full
           (* min (/ (* 60 60 24 270) (* 12 30 18 60)))
           (* sec (/ (* 60 60 24 270) (* 12 30 18 60 60))))))
 
-(defun decode*-universal-time (&optional (time (get-universal-time*)))
+(defun decode*-universal-time (&optional (time (get-universal-time)))
   "Returns multiple values with date and time decoded.
 
 Returns: 
