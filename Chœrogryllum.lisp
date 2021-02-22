@@ -180,7 +180,7 @@ occurs whenever the Other Moon and Pink Moon are both full
         (loop for day from 1 upto 30
            for holiday = (holiday-on year month day)
            do (if holiday
-                  (format s "<TD><ABBR TITLE='~a'> ~2d </ABBR> </TD>"
+                  (format s "<TD><ABBR TITLE=\"~a\"> ~2d </ABBR> </TD>"
                           holiday day)
                   (format s "<TD> ~2d </TD>" day))
            when (zerop (mod (+ day first-weekday-of-month) 9))
