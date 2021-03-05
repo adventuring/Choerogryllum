@@ -214,12 +214,12 @@ occurs whenever the Other Moon and Pink Moon are both full
   (check-type min (integer 0 59))
   (check-type sec (integer 0 59))
   (round (+
-          (* (+ year 10) 60 60 24 360)
-          (* (1- month) (/ (* 60 60 24 360) 12))
-          (* (1- day) (/ (* 60 60 24 360) (* 12 30)))
-          (* hour (/ (* 60 60 24 360) (* 12 30 18)))
-          (* min (/ (* 60 60 24 360) (* 12 30 18 60)))
-          (* sec (/ (* 60 60 24 360) (* 12 30 18 60 60))))))
+          (* (+ year 10) 60 60 18 360)
+          (* (1- month) (/ (* 60 60 18 360) 12))
+          (* (1- day) (/ (* 60 60 18 360) (* 12 30)))
+          (* hour (/ (* 60 60 18 360) (* 12 30 18)))
+          (* min (/ (* 60 60 18 360) (* 12 30 18 60)))
+          (* sec (/ (* 60 60 18 360) (* 12 30 18 60 60))))))
 
 (defun decode*-universal-time (&optional (time (get-universal-time)))
   "Returns multiple values with date and time decoded.
@@ -227,13 +227,13 @@ occurs whenever the Other Moon and Pink Moon are both full
 Returns: 
 \(sec min hour day month year weekday other-month-day pink-month-day julian)
 "
-  (let* ((year (- (floor time (* 60 60 24 360)) 10))
-         (month (1+ (floor (mod time (* 60 60 24 360)) (/ (* 60 60 24 360) 12))))
-         (day (1+ (floor (mod time (/ (* 60 60 24 360) 12)) (/ (* 60 60 24 360) (* 12 30)))))
-         (hour (floor (mod time (/ (* 60 60 24 360) (* 12 30))) (/ (* 60 60 24 360) (* 12 30 18))))
-         (min  (floor (mod time (/ (* 60 60 24 360) (* 12 30 18))) (/ (* 60 60 24 360) (* 12 30 18 60))))
-         (sec  (floor (mod time (/ (* 60 60 24 360) (* 12 30 18 60))) (/ (* 60 60 24 360) (* 12 30 18 60 60))))
-         (julian (mod (+ day (* 30 month) (* 360 year)) 360))
+  (let* ((year (- (floor time (* 60 60 18 360)) 10))
+         (month (1+ (floor (mod time (* 60 60 18 360)) (/ (* 60 60 18 360) 12))))
+         (day (1+ (floor (mod time (/ (* 60 60 18 360) 12)) (* 60 60 18) )))
+         (hour (floor (mod time (* 60 60 18)) (* 60 60)))
+         (min  (floor (mod time (* 60 60)) 60))
+         (sec  (mod time 60))
+         (julian (+ day (* 30 month) (* 360 year)))
          (weekday (mod (+ 3 julian) 9))
          (other-month-day (1+ (mod (+ 19 18 julian) 71)))
          (pink-month-day (1+ (mod (+ 11 18 julian) 53))))
@@ -246,7 +246,7 @@ Returns:
             (the (mod 9) weekday)
             (the (integer 1 72) other-month-day)
             (the (integer 1 54) pink-month-day)
-            (the (mod 360) julian))))
+            (the (mod 360) (mod julian 360)))))
 
 (defun day-of-week* (i &key (form :long))
   (elt (ecase form
