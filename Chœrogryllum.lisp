@@ -227,7 +227,8 @@ occurs whenever the Other Moon and Pink Moon are both full
 Returns: 
 \(sec min hour day month year weekday other-month-day pink-month-day julian)
 "
-  (let* ((year (- (floor time (* 60 60 18 360)) 10))
+  (let* ((time (round time))
+         (year (- (floor time (* 60 60 18 360)) 10))
          (month (1+ (floor (mod time (* 60 60 18 360)) (/ (* 60 60 18 360) 12))))
          (day (1+ (floor (mod time (/ (* 60 60 18 360) 12)) (* 60 60 18) )))
          (hour (floor (mod time (* 60 60 18)) (* 60 60)))
